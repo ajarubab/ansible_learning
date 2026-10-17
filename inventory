@@ -1,0 +1,11 @@
+nodeA
+nodeB.vicky.com
+172.16.107.135
+
+[dev]
+nodeA.raja.com
+nodeB
+
+[prod]
+nodeB
+nodeC.redhat.com
