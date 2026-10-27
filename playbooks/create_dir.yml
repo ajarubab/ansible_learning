@@ -1,0 +1,8 @@
+---
+- name: Create directory on nodeA
+  hosts: nodeA
+  tasks:
+    - name: Make sure mydir exist on nodeA
+      ansible.builtin.file:
+        path: /tmp/dirByAnsible
+        state: directory
