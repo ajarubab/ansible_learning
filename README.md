@@ -25,7 +25,26 @@ After initalising remote connection
 -- Run as ansible-navigator
     ansible-navigator run  '/workspaces/ansible-learning/playbooks/create_dir.yml' --ee true --pae false --ce podman --eei 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest'
 
+-- Run as ansible-navigator with verbosity( -v,-vv,-vvv,-vvvv,-vvvvv,-vvvvvv)
+    ansible-navigator run  '/workspaces/ansible-learning/playbooks/create_dir.yml' --ee true --pae false --ce podman --eei 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest' -vvv
+
+-- Run as ansible-navigator with verbosity( -v,-vv,-vvv,-vvvv,-vvvvv,-vvvvvv)
+    ansible-navigator run  '/workspaces/ansible-learning/playbooks/create_dir.yml' --ee true --pae false --ce podman --eei 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest' -vv
+
 --ee true : Execution Environment enabled
 -- pae false : Playbook Artifact Enable set false here 
 -- ce podman : container Engine is podman
 --eei : Execution Environment Image
+
+
+(SMOKE TEST, DRY RUN) [Not actual run] - Recommended Before every Actual Run
+- ansible-navigator run playbooks/usr_n_grp_mng.yml --check
+
+(SYNTAX CHECK BEFORE RUN)
+- ansible-navigator run playbooks/usr_n_grp_mng.yml --syntax-check
+
+(Modify indentation or wrong keywords using vi editor)
+- vi playbooks/usr_n_grp_mng.yml
+
+(Running an artifact.json file to check its record of last playbook run output)
+- ansible-navigator replay playbooks/usr_n_grp_mng-artifact-2026-10-22T11:34:41.152451+00.00.json
