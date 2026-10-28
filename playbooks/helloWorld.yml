@@ -1,0 +1,7 @@
+---
+- name: Hello world program
+  hosts: nodeA
+  tasks:
+    - name: Print hello world
+      ansible.builtin.debug:
+        msg: Hello world!
