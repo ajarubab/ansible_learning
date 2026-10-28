@@ -19,3 +19,13 @@ After initalising remote connection
 - ansible -i ../inventory all -m ping
 - ansible nodeA -m command -a 'ls -ld /tmp/dirByAnsible/'
 
+-- Run as ansible-playbook
+    ansible-playbook  '/workspaces/ansible-learning/playbooks/create_dir.yml'
+
+-- Run as ansible-navigator
+    ansible-navigator run  '/workspaces/ansible-learning/playbooks/create_dir.yml' --ee true --pae false --ce podman --eei 'registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest'
+
+--ee true : Execution Environment enabled
+-- pae false : Playbook Artifact Enable set false here 
+-- ce podman : container Engine is podman
+--eei : Execution Environment Image

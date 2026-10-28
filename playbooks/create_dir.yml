@@ -1,8 +1,8 @@
 ---
-- name: Remove directory dirByAnsible from nodeA
-  hosts: nodeA
+- name: Create dirByAnsible directory in /tmp/ of nodeA and nodeB
+  hosts: nodeA,nodeB
   tasks:
-    - name: Make sure mydirByAnsible removed from nodeA
+    - name: Make sure mydirByAnsible exist on nodeA and nodeB
       ansible.builtin.file:
         path: /tmp/dirByAnsible
-        state: absent
+        state: directory
