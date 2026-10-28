@@ -48,3 +48,6 @@ After initalising remote connection
 
 (Running an artifact.json file to check its record of last playbook run output)
 - ansible-navigator replay playbooks/usr_n_grp_mng-artifact-2026-10-22T11:34:41.152451+00.00.json
+
+(Check the package firewalld in Integrated terminal of ansible on nodeA)
+- ansible nodeA -m command -a 'rpmquery firewalld'

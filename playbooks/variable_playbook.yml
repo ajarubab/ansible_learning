@@ -1,0 +1,24 @@
+---
+- name: P1   - Configure Apache nodeA
+  hosts: nodeA
+  become: true
+  vars:
+    insecure_web_pkg: httpd
+    insecure_web_svc: httpd
+    http_server_file: index.html
+    http_default_port: 80
+  tasks:
+    - name: Install {{ insecure_web_pkg }} package on nodeA
+      ansible.builtin.dnf:
+        name: "{{ insecure_web_pkg }}"
+        state: present
+    - name: Start and Enable {{ insecure_web_svc }} service on nodeA
+      ansible.builtin.service:
+        name: "{{ insecure_web_svc }}"
+        state: started
+        enabled: true
+    - name: Create {{ http_server_file }} file on nodeA
+      ansible.builtin.copy:
+        content: "Hello guys, from ansible playbook\n"
+        dest: "/var/www/html/{{ http_server_file }}"
+        mode: "0644"
