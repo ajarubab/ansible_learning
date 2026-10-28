@@ -1,0 +1,14 @@
+---
+- name: Add user and group on nodeA
+  hosts: nodeA
+  become: true
+  tasks:
+    - name: T1 - create secondary group on nodeA [grouppadd Nutritional_Institute]
+      ansible.builtin.group:
+        name: Nutritional_Institute
+        state: present
+    - name: T2 - create regular user on nodeA [useradd -G "Nutritional_Institute" Rajan]
+      ansible.builtin.user:
+        name: Rajan
+        state: present
+        groups: Nutritional_Institute
