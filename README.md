@@ -17,4 +17,5 @@ After initalising remote connection
 - ansible-inventory --list
 - ansible-inventory --graph
 - ansible -i ../inventory all -m ping
+- ansible nodeA -m command -a 'ls -ld /tmp/dirByAnsible/'
 
