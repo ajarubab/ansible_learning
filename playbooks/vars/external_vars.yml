@@ -1,0 +1,4 @@
+---
+network_security_pkg: firewalld
+network_security_svc: firewalld
+custom__port: 8086/tcp

@@ -1,0 +1,21 @@
+---
+- name: Configure network security andd add custom port no 8086/tcp on nodeA
+  hosts: nodeA
+  become: true
+  vars_files:
+    - external_vars.yml
+  tasks:
+    - name: Install {{ network_security_pkg }} package on nodeA
+      ansible.builtin.yum:
+        name: "{{ network_security_pkg }}"
+        state: installed
+    - name: Start and Enable {{ network_security_svc }} service on nodeA
+      ansible.builtin.systemd:
+        name: "{{ network_security_svc }}"
+        state: started
+        enabled: true
+    - name: Add custom port {{ custom__port }} on nodeA network security
+      ansible.posix.firewalld:
+        port: "{{ custom__port }}"
+        state: enabled
+        immediate: true

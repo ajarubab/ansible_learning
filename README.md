@@ -49,5 +49,12 @@ After initalising remote connection
 (Running an artifact.json file to check its record of last playbook run output)
 - ansible-navigator replay playbooks/usr_n_grp_mng-artifact-2026-10-22T11:34:41.152451+00.00.json
 
-(Check the package firewalld in Integrated terminal of ansible on nodeA)
-- ansible nodeA -m command -a 'rpmquery firewalld'
+(Check the package firewalld in Integrated terminal of ansible on all nodes)
+- ansible nodeA,nodeB,nodeC -m command -a 'rpmquery firewalld'
+
+(Install the firewalld service using adhoc command on all 3 hosts)
+- ansible nodeA,nodeB,nodeC -m dnf -a "name=firewalld state=present" -b
+- ansible nodeA,nodeB,nodeC -m dnf -a "name=firewalld state=started enabled=yes" -b
+
+(Uninstall the firewalld service using adhoc command on all 3 hosts)
+- ansible nodeA,nodeB,nodeC -m dnf -a "name=firewalld state=absent" -b
