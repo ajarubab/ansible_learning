@@ -1,14 +1,29 @@
 ---
-- name: Add user and group on nodeA
+- name: T1 - remove user and group on nodeA
   hosts: nodeA
   become: true
   tasks:
-    - name: T1 - create secondary group on nodeA [grouppadd Nutritional_Institute]
+    - name: T1 - remove secondary group on nodeA
       ansible.builtin.group:
         name: Nutritional_Institute
-        state: present
-    - name: T2 - create regular user on nodeA [useradd -G "Nutritional_Institute" Rajan]
+        state: absent
+    - name: T2 - remove regular user on nodeA
       ansible.builtin.user:
         name: Rajan
-        state: present
+        state: absent
         groups: Nutritional_Institute
+- name: T2 -Add user and group on nodeB
+  hosts: nodeB
+  become: true
+  tasks:
+    - name: T1 - create supplimentary group on nodeB
+      ansible.builtin.group:
+        name: DevOps_Team
+        state: present
+    - name: T2 - create regular user on nodeB
+      ansible.builtin.user:
+        name: Rajat
+        state: present
+        uid: 5000
+        shell: /sbin/nolgoin
+        groups: DevOps_Team
