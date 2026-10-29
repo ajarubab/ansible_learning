@@ -58,3 +58,25 @@ After initalising remote connection
 
 (Uninstall the firewalld service using adhoc command on all 3 hosts)
 - ansible nodeA,nodeB,nodeC -m dnf -a "name=firewalld state=absent" -b
+
+(Ansible- vault commands)
+
+- ansible-valut encrypt playbooks/pwd_file
+New Vault password:
+Confirm New Vault password:
+Encryption successful
+
+- ansible-vault view playbooks/pwd_file
+Vault password:
+
+- ansible-vault edit playbooks/pwd_file
+Vault password:
+(press i -> Edit the content in automatically opened VI editor -> Esc -> :wq Enter)
+
+- ansible-vault decrypt playbooks/pwd_file --output=dup_pwd_file
+Vault password:
+Decryption successful
+
+- ansible-vault decrypt playbooks/pwd_file
+Vault password:
+Decryption successful
