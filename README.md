@@ -92,3 +92,15 @@ Confirm new vault password (myvault):
 (Fetching the secrect.yml file content without putting vault password in prompt and giving vault password by safeguard file)
 - ansible-vault view playbooks/vars/secret.yml --vault-password-file=playbooks/safeguard
 
+if we change the password text of safeguard file from redhat123 to Linux123 
+- echo Linux123 > playbooks/safeguard
+
+In that case to access the content of out secret.yml valut file we have to change (REKEY) the vault password by:-
+
+- ansible-vault rekey playbooks/vars/secret.yml
+Vault password: [type redhat123]
+New Vault password: [type Linux123]
+Confirm New Vault password: [Again type Linux123]
+Rekey successful
+
+In this case the secret key(content of of the secret.yml file) also got changed automatically
