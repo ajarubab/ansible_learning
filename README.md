@@ -80,3 +80,15 @@ Decryption successful
 - ansible-vault decrypt playbooks/pwd_file
 Vault password:
 Decryption successful
+
+( Creation of a vault file )
+- ansible-vault create playbooks/vars/secret.yml --vault-id myvault@prompt
+New vault password (myvault):
+Confirm new vault password (myvault):
+
+(creating a file having password of myvault password)
+- echo redhat123 > playbook/safeguard
+
+(Fetching the secrect.yml file content without putting vault password in prompt and giving vault password by safeguard file)
+- ansible-vault view playbooks/vars/secret.yml --vault-password-file=playbooks/safeguard
+
