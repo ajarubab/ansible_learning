@@ -1,0 +1,12 @@
+---
+- name: Create a user with password
+  hosts: nodeB
+  become: true
+  vars_files:
+    - vars/secret.yml
+  tasks:
+    - name: Create user {{ user_name }} on nodeB withh password
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        password: "{{ user_pwhash | password_hash('sha512') }}"
+        state: present
