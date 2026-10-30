@@ -1,0 +1,17 @@
+---
+- name: Create a file in new recursive directory and copy playbook file data into created file on nodeB
+  hosts: nodeB
+  become: true
+  vars:
+    file_path: /etc/ansible/facts.d
+    file_name: custom.fact
+  tasks:
+    - name: Creation of a nested directory on nodeB
+      ansible.builtin.file:
+        path: "{{ file_path }}"
+        state: directory
+        recurse: true
+    - name: Copy the content of {{ file_name }} in {{ file_path }} on nodeB
+      ansible.builtin.copy:
+        src: "{{ file_name }}"
+        dest: "{{ file_path }}"
