@@ -1,0 +1,48 @@
+---
+- name: Use of loop in Installing the Packages and starting and stopping services
+  hosts: all
+  become: true
+  vars:
+    pkg_svc:
+      - httpd
+      - firewalld
+      - autofs
+      - chronyd
+      - crond
+      - atd
+      - rsyslog
+      - cups
+  tasks:
+    - name: P1T1 - Install multiple packages on all hosts without loop
+      ansible.builtin.yum:
+        name:
+          - httpd
+          - firewalld
+          - autofs
+          - chrony
+          - tree
+        state: installed
+    - name: P1T2 - Use of loop without variable to stop active services on all hosts
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - crond
+        - atd
+        - rsyslog
+        - cups
+    - name: P1T3 - Use of loop with variable to start various services on all hosts
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: started
+      loop: "{{ pkg_svc }}"
+    - name: P1T4 - Un-Install multiple packages from all hosts with loop
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: removed
+      loop:
+        - httpd
+        - firewalld
+        - autofs
+        - chrony
+        - tree
