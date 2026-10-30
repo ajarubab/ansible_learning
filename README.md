@@ -116,3 +116,9 @@ Rekey successful
 * To get only memory related info from FACTS for all hosts
 - ansible all -m setup | grep mem
 
+# Importing Custom Facts of any host
+
+To import the custom facts of any server/host machine, those info should be kept in the path 
+"/etc/ansible/facts.d" with any filename but should have an extention of ".fact"
+Only iin that case the modeule "ansible_local" can fetch the info into the terminal of vscode ide under dev container.
+And for it we do not need the root login permission [ become: true] of the host/server.

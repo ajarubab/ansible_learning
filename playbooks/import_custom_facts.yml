@@ -1,0 +1,7 @@
+---
+- name: Import the custom facts of nodeB on terminal
+  hosts: nodeB
+  tasks:
+    - name: Show the custom facts of nodeB in the terminal
+      ansible.builtin.debug:
+        var: ansible_local
