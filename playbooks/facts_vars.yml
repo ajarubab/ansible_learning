@@ -1,0 +1,21 @@
+---
+- name: P1- Fact Dump of nodeA
+  hosts: nodeA
+  # gather_facts: false
+  tasks:
+    - name: Get the facts of nodeA
+      ansible.builtin.debug:
+        var: ansible_facts
+- name: P2- Specific Fact Retrieval of nodeB and nodeC
+  hosts: nodeB,nodeC
+  # gather_facts: false
+  tasks:
+    - name: Get specific facts of nodeB and nodeC
+      ansible.builtin.debug:
+        msg: >
+          ==> FQDN : {{ ansible_facts.fqdn }},
+          ==> IPV4 {{ ansible_facts['default_ipv4']['address'] }},
+          ==> IPV4 GATEWAY :{{ ansible_facts.default_ipv4.gateway }},
+          ==> IPV4 MAC : {{ ansible_facts.default_ipv4.macaddress }},
+          ==> IPV6 : {{ ansible_facts.all_ipv6_addresses }},
+          ==> INTERFACE :{{ ansible_facts.interfaces }}
