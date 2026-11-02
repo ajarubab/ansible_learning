@@ -1,0 +1,67 @@
+---
+- name: Exploring various basic operations of File moodule
+  hosts: nodeC
+  become: true
+
+  vars:
+
+    dir_path: /tmp/data
+    src_path: /tmp/data/data.txt
+    emp_file_path: /tmp/data/myEmpFile.txt
+    reg_file_path: /tmp/data/myRegfile.txt
+    soft_link_path: /tmp/data/mySoftLink.txt
+    hard_link_path: /tmp/data/myHardLink.txt
+
+  tasks:
+
+    - name: Create a directory
+      ansible.builtin.file:
+        path: "{{ dir_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: Create an Empty file
+      ansible.builtin.file:
+        path: "{{ emp_file_path }}"
+        state: touch
+        mode: "0644"
+
+    - name: Create a source file for links
+      ansible.builtin.file:
+        path: "{{ src_path }}"
+        state: touch
+        mode: "0644"
+
+    - name: Modify properties of an existing file
+      ansible.builtin.file:
+        path: "{{ emp_file_path }}"
+        state: file
+        mode: "0600"
+
+    - name: Create a symbolic link
+      ansible.builtin.file:
+        src: "{{ src_path }}"
+        path: "{{ soft_link_path }}"
+        state: link
+
+    - name: Create a hard link
+      ansible.builtin.file:
+        src: "{{ src_path }}"
+        path: "{{ hard_link_path }}"
+        state: hard
+
+    - name: Change directory permissions
+      ansible.builtin.file:
+        path: "{{ dir_path }}"
+        state: directory
+        mode: '0770'
+
+    - name: Remove a file
+      ansible.builtin.file:
+        path: "{{ reg_file_path }}"
+        state: absent
+
+    - name: Remove a directory
+      ansible.builtin.file:
+        path: "{{ dir_path }}"
+        state: absent
