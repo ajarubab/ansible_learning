@@ -1,0 +1,38 @@
+---
+- name: Use of Block
+  hosts: nodeC
+  become: true
+  vars:
+    dir_01_path: /tmp/myFolder
+    file_01_path: /tmp/myFolder/myFile01.txt
+    dir_02_path: /tmp/myFolder/myData/ImpData
+  tasks:
+    - block:
+        - name: Create a dir {{ dir_01_path }}
+          ansible.builtin.file:
+            path: "{{ dir_01_path }}"
+            state: directory
+        - name: Create a file {{ file_01_path }}
+          ansible.builtin.file:
+            path: "{{ file_01_path }}"
+            state: touch
+        - name: Enter a welcome message into created file {{ file_01_path }}
+          ansible.builtin.copy:
+            content: "Hello All, I welcome you all from File_01.\n"
+            dest: "{{ file_01_path }}"
+        - name: Create another dir {{ dir_02_path }}
+          ansible.builtin.file:
+            path: "{{ dir_02_path }}"
+            state: directory
+            recurse: true
+        - name: Copy file {{ file_01_path }} content to {{ dir_02_path }} with another name
+          ansible.builtin.copy:
+            src: "{{ file_01_path }}"
+            dest: "{{ dir_02_path }}/dupFile.txt"
+            remote_src: true
+      when: ansible_facts['distribution'] == "RedHat"
+      # when: ansible_facts['distribution'] == "CentOS"
+    # - name: Delete the directory {{ dir_01_path }}
+    #   ansible.builtin.file:
+    #     path: "{{  dir_01_path }}"
+    #     state: absent
