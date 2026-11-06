@@ -1,0 +1,51 @@
+---
+- name: Use of Block-Rescue-Always
+  hosts: nodeC
+  become: true
+  tasks:
+    - name: Check Httpd package
+      ansible.builtin.package_facts:
+        manager: auto
+    - block:
+        - block:
+            - name: Httpd installation status
+              ansible.builtin.debug:
+                msg: "Httpd is already installed, Starting Restart and then Uninstallation. \n"
+            - name: Restart the existing httpd
+              ansible.builtin.service:
+                name: httpd
+                state: restarted
+            - name: Uninstall the httpd
+              ansible.builtin.dnf:
+                name: httpd
+                state: removed
+            - name: Httpd removal confirmation
+              ansible.builtin.debug:
+                msg: "Httpd Uninstalleed Successfullly. \n"
+      when: "'httpd' in ansible_facts.packages"
+    - block:
+        - name: Display Installation procedure message
+          ansible.builtin.debug:
+            msg: "httpd is not installed, Starting installation process..."
+        - name: Install httpd
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+        - name: Enable and Start the httpd
+          ansible.builtin.service:
+            name: httpd
+            enabled: true
+            state: started
+        - name: Httpd installation confirmation
+          ansible.builtin.debug:
+            msg: "Httpd Installeed Successfullly. \n"
+      when: "'httpd' not in ansible_facts.packages"
+      rescue:
+        - name: Stop httpd service
+          ansible.builtin.service:
+            name: httpd
+            state: stopped
+      always:
+        - name: Httpd installation status
+          ansible.builtin.debug:
+            msg: "Httpd installation status regular checkup done.\n"
