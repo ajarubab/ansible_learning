@@ -1,0 +1,46 @@
+---
+- name: Maintain either Httpd or Nginx on all nodes and make service active and enabled
+  hosts: all
+  become: true
+  vars:
+    servers:
+      - httpd
+      - nginx
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Install Httpd and Nginx
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ servers }}"
+
+    - name: Select either of the webserver
+      ansible.builtin.set_fact:
+        server_name: "{{ ['httpd', 'nginx'] | random }}"
+
+    - name: Uninstall unselected webserver
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ servers }}"
+      when: item != server_name
+
+    - name: Activate and Enable Selected Webserver
+      ansible.builtin.service:
+        name: "{{ server_name }}"
+        enabled: true
+        state: started
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Display current webserver and its status
+      ansible.builtin.debug:
+        msg:
+          - "Node: {{ inventory_hostname }}"
+          - "Installed webserver: {{ 'httpd' if 'httpd' in ansible_facts.packages else 'nginx' }}"
+          - "Service State: {{ ansible_facts.services[server_name + '.service'].state }}"
+          - "Service Status: {{ ansible_facts.services[server_name + '.service'].status }}"
