@@ -1,0 +1,50 @@
+---
+- name: Install nginx where httpd is not installed
+  hosts: all
+  become: true
+  tasks:
+    - name: Checking OS Family
+      ansible.builtin.debug:
+        msg:
+          - "OS Family: {{ ansible_facts.os_family }}"
+          - "OS Distribution: {{ ansible_facts.distribution_version }}"
+
+    - name: Check the availibility of httpd
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Install nginx if httpd is not installed
+      ansible.builtin.dnf:
+        name: nginx
+        state: installed
+
+      when:
+        - "'httpd' not in ansible_facts.packages"
+        # we can make "RedHat" to "Redhat" deliberately to make matching condition false hence and skipping the Task
+        # "in ["Debian", "RedHat"]" means here Debian OR RedHat
+        - ansible_facts.os_family in ["Debian", "RedHat"]
+        # we can make verion less than 10.0 or more than 10.0 or not equal to 10.0 deliberately
+        #  to make matching condition false and hence skipping the Task
+        - ansible_facts['distribution_version'] is version('11.0', '<=')
+      notify: Enable and Start nginx
+
+  handlers:
+    - name: Enabling and Activating nginx
+      ansible.builtin.service:
+        name: nginx
+        enabled: true
+        state: started
+      listen: Enable and Start nginx
+
+# Runnig this code on
+
+# NodeA : httpd :  not-installed , nginx : not-installed
+# NodeB : httpd :  Installed, Active and Enabled , nginx : not-installed
+# NodeC : httpd :  not-installed , nginx : Installed, Inactive and Disabled
+
+#Expected Output:
+
+# NodeA : httpd :  nginx : Installed, Active and Enabled [CHANGED]
+# NodeB : httpd :  nginx : not-installed [Skipping]
+# NodeC : httpd :  nginx : Installed, Inactive and Disabled [OK]
+
