@@ -1,0 +1,39 @@
+---
+- name: Handling error by ignoring the error
+  hosts: all
+  become: true
+  ignore_errors: true
+  vars:
+    daemons:
+      - httpd
+      - firewalld
+  tasks:
+    - name: Create an Empty file in /tmp directory
+      ansible.builtin.file:
+        path: /tmp/demofile.txt
+        # here the state is being typed status delibrately to create some kind of execition error and to activate ignore_errors
+        status: touch
+    - name: Install httpd and firewalld
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: installed
+      loop: "{{ daemons }}"
+    - name: Restart httpd and firewalld
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+      loop: "{{ daemons }}"
+    - name: Verify firewalld for port 80 and 443
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        immediate: true
+        permanent: true
+        state: enabled
+      loop:
+        # here the tcp is being typed tcip delibrately to create some kind of execition error and to activate ignore_errors
+        - 80/tcip
+        - 443/tcip
+    - name: Create a directory myNewFolder in /tmp
+      ansible.builtin.file:
+        path: /tmp/myNewFolder
+        state: directory
