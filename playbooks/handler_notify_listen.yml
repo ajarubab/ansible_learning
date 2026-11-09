@@ -1,0 +1,44 @@
+---
+- name: Use of handler
+  hosts: all
+  become: true
+  vars:
+    pkgs:
+      - httpd
+      - firewalld
+  tasks:
+    - name: Install httpd and firewalld on all nodes
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: installed
+      loop: "{{ pkgs }}"
+      notify: Activating httpd
+  handlers:
+    # Method 1 : Without Listen ; Just Keep the task name same as notify value
+    - name: Activating httpd
+      ansible.builtin.service:
+        name: httpd
+        enabled: true
+        state:
+          started
+          # Method 2 : With Listen ; No need to Keep the task name same as notify value, but it it same in Listen value
+    - name: Now Activating firewalld
+      ansible.builtin.service:
+        name: firewalld
+        enabled: true
+        state: started
+      listen: Activating httpd
+# So basically the notify--handlers-listen works on only "changed" tasks of all/intended hosts
+
+# Runnig this code on
+
+# NodeA : httpd :  not-installed , firewalld : not-installed
+# NodeB : httpd :  not-installed , firewalld : Installed, Active and Enabled
+# NodeC : httpd :  Installed, Inactive and Enabled , firewalld : Installed, Active and Disabled
+
+#Expected Output:
+
+# NodeA : httpd :  Installed, Active and Enabled [CHANGED] , firewalld : Installed, Active and Enabled [CHANGED]
+# NodeB : httpd :  Installed, Active and Enabled [CHANGED] , firewalld : Installed, Active and Enabled [OK]
+# NodeC : httpd :  Installed, Inactive and Enabled [OK], firewalld : Installed, Active and Disabled [OK]
+
