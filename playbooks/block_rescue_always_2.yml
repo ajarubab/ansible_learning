@@ -1,0 +1,42 @@
+---
+- name: httpd/firewalld work using block-rescue and always
+  hosts: nodeC
+  become: true
+  vars:
+    daemons:
+      - httpd
+      - firewalld
+  tasks:
+    - block:
+        - name: Install httpd and firewalld
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            state: installed
+          loop: "{{ daemons }}"
+        - name: Copy httpd conf to /etc/httpd/conf/httpd.conf location
+          ansible.builtin.copy:
+            src: httpd.conf
+            dest: /etc/httpd/conf/httpd.conf
+        - name: Restart httpd and firewalld
+          ansible.builtin.service:
+            name: "{{ item }}"
+            state: restarted
+          loop: "{{ daemons }}"
+      rescue:
+        - name: Stop httpd
+          ansible.builtin.service:
+            name: httpd
+            state: stopped
+        - name: Acknowledgement for user
+          ansible.builtin.debug:
+            msg: " HTTPD Service stopped due to config failed to initialise"
+      always:
+        - name: Verify firewalld for port 80 and 443
+          ansible.posix.firewalld:
+            port: "{{ item }}"
+            immediate: true
+            permanent: true
+            state: enabled
+          loop:
+            - 80/tcp
+            - 443/tcp
