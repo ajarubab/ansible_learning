@@ -1,0 +1,21 @@
+---
+- name: Using variable for conditional tasks execution
+  hosts: nodeC
+  become: true
+  vars:
+    run_this_task: true
+  tasks:
+    - name: Install mariadb-server package if nodeC have free memory > 2GiB
+      ansible.builtin.dnf:
+        name: mariadb-server
+        state: installed
+      when: ansible_memfree_mb > 2048
+
+    - name: Enable and Start httpd webserver if condition is true only
+      ansible.builtin.service:
+        name: httpd
+        enabled: true
+        state: started
+      when: run_this_task
+
+# so here when: run_this_task Acts as Task Executor which only executes task when it gets true( green signal)
