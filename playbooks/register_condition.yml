@@ -1,0 +1,23 @@
+---
+- name: Modify ssh config and then reload or restart ssh service
+  hosts: nodeB
+  become: true
+  tasks:
+    - name: Modify ssh config
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin yes'
+        # line: 'PermitRootLogin no'
+      register: sshd_config_change
+
+    - name: Print the value of sshd_config_change
+      ansible.builtin.debug:
+        var: sshd_config_change
+
+    - name: Restart shhd if config changed
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+      when: sshd_config_change.changed
+
