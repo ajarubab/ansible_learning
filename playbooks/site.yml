@@ -1,0 +1,17 @@
+---
+- name: Main playbook to combine multiple task files and playbook
+  hosts: all
+  become: true
+  tasks:
+    - name: Import package installation task file
+      ansible.builtin.import_tasks: tasks/pkg_manager.yml
+    - name: Include MOTD conf task file for prod nodes Only
+      ansible.builtin.include_tasks: tasks/banner_manager.yml
+      when: inventory_hostname in groups['prod']
+    - name: Create multiple users as per user manager task file
+      ansible.builtin.include_tasks: tasks/user_manager.yml
+      loop:
+        - harry
+        - sam
+- name: Import service manager playbook file
+  ansible.builtin.import_playbook: service_manager.yml

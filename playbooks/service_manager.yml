@@ -1,0 +1,15 @@
+---
+- name: Manage required services on managed host
+  hosts: nodeB,nodeC
+  become: true
+  vars:
+    svc_pkg:
+      - httpd
+      - firewalld
+  tasks:
+    - name: Enable and Start httpd and firewalld service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop: "{{ svc_pkg }}"

@@ -1,0 +1,6 @@
+---
+- name: Set Production warning banner
+  ansible.builtin.copy:
+    content: "** WARNING: NodeC is a Production Node, Be Causious**\n"
+    dest: /etc/motd
+    mode: '600'

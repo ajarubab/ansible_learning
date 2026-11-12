@@ -1,0 +1,5 @@
+---
+- name: Add users on managed host
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
