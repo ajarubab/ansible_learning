@@ -1,0 +1,12 @@
+---
+- name: Using J2 template with loop
+  hosts: all
+  become: true
+  tasks:
+    - name: update /etc/hosts file on all nodes
+      ansible.builtin.template:
+        src: jinja2_hosts.j2
+        dest: /etc/hosts
+      when: inventory_hostname in groups['dev']
+
+# when we uncomment line no. 10 only nodes under dev group is get updated otherwise all nodes /etc/hosts file get changes
