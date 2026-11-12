@@ -1,0 +1,12 @@
+{# This File is Edited by ansible j2 template. #}
+
+===========================================
+Welcome to {{ ansible_facts['fqdn'] | upper }}
+===========================================
+Admin : {{ system_owner | default('unassigned') }}
+OS : {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+Memory : {{ ansible_facts['memtotal_mb'] }} MB
+
+{% if ansible_facts['memtotal_mb'] < 2048 %}
+    WARNING: LOW MEMORY SYSTEM
+{% endif %}

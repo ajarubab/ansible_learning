@@ -1,0 +1,13 @@
+---
+- name: Use of jinja2 template
+  hosts: all
+  become: true
+  vars:
+    system_owner: Controller.server.org
+  tasks:
+    - name: Using jinja2_motd.j2 file change the /etc/motd of all nodes
+      ansible.builtin.template:
+        src: jinja2_motd.j2
+        dest: /etc/motd
+
+# So basically the jinja2 template is used for overwrite any file on large scale
