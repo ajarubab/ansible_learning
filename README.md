@@ -122,3 +122,67 @@ To import the custom facts of any server/host machine, those info should be kept
 "/etc/ansible/facts.d" with any filename but should have an extention of ".fact"
 Only iin that case the modeule "ansible_local" can fetch the info into the terminal of vscode ide under dev container.
 And for it we do not need the root login permission [ become: true] of the host/server.
+
+
+# Selecting Hosts by Using Host Patterns
+
+* When playbook tasks are applied on all the managed host mentioned in inventory file 
+- hosts: all
+- hosts: '*'
+
+* When playbook tasks are applied on nodeA only 
+- hosts: nodeA
+
+* When playbook tasks are applied on nodeB only 
+- hosts: nodeB
+
+* When playbook tasks are applied on nodeA and nodeC only 
+- hosts: nodeA,nodeC
+
+* When playbook tasks are applied on ip address 192.178.92.130 only 
+- hosts: 192.178.92.130
+
+* When playbook tasks are applied on nodeB and ip address 192.178.92.130 only 
+- hosts: nodeB, 192.178.92.130
+
+* When playbook tasks are applied on group Prod only 
+- hosts: Prod
+
+* When playbook tasks are applied on group Dev and Stag only 
+- hosts: Dev,Stag
+
+* When playbook tasks are applied on group Prod and ip address 192.178.92.130 only 
+- hosts: Prod,192.178.92.130
+
+* [test_nodes:children]
+dev
+stag
+
+here test_nodes will be known as Group of groups or Nested groupand ":childeren" is mandatory for declaring a nested group. hence
+
+* When playbook tasks are applied on nested test_nodes only 
+- hosts: test_nodes
+
+which eventually means
+- hosts: dev,stag
+
+* When playbook tasks are applied on ip address 192.178.92.10 to 192.178.92.100 (on 90 servers/nodes) 
+- hosts: 192.178.92.[10:100]
+
+* When playbook tasks are applied on ip address 192.178.01.* to 192.178.50.*
+- hosts: 192.178.[01:50].*
+
+* When playbook tasks are applied on ip address 190.*.*.* to 192.*.*.*
+- hosts: [190:192].*.*.*
+
+# cat /etc/resolv.conf (Stores ip address of DNS server)
+
+# To implement ansible task on the localuser(student) of any node/server
+- make an entry in inventory file like
+
+[student_nodeA]
+nodeA ansible_host=172.16.107.131 ansible_user=student
+
+then we can just put 
+- hosts: student_nodeA
+

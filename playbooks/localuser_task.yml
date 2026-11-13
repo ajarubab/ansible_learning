@@ -1,0 +1,17 @@
+---
+- name: Create a directory and file in student user of nodeA VM
+  hosts: student_nodeA,student_controller,controller
+  become: true
+  gather_facts: false
+  tasks:
+    - name: create a directory
+      ansible.builtin.file:
+        path: /home/student/dirByAnsibleTask
+        state: directory
+        mode: '0755'
+
+    - name: create a file with content
+      ansible.builtin.copy:
+        content: "Hello from ansible_controller_node_student\n"
+        dest: /home/student/dirByAnsibleTask/myfile.txt
+        mode: '0644'

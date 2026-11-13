@@ -1,12 +1,35 @@
 nodeA
 nodeB
 nodeC
+# run "ssh-copy-id root@host.containers.internal" to make it ssh key based login node to avoid connection refused problem
+controller ansible_host=host.containers.internal ansible_user=root
+
+# Student user aliases
+# student_controller ansible_host=172.16.107.128 ansible_user=student (connection refused in ping due to podman internal config)
+# run "ssh-copy-id student@host.containers.internal" to make it ssh key based login node to avoid connection refused problem
+
+student_controller ansible_host=host.containers.internal ansible_user=student
+student_nodeA ansible_host=172.16.107.131 ansible_user=student
+student_nodeB ansible_host=172.16.107.132 ansible_user=student
+student_nodeC ansible_host=172.16.107.135 ansible_user=student
 
 [dev]
 nodeA
+nodeB
 
 [stag]
 nodeB
+nodeC# run "ssh-copy-id student@host.containers.internal" to make it ssh key based login node to avoid connection refused problem# run "ssh-copy-id student@host.containers.internal" to make it ssh key based login node to avoid connection refused problem
 
 [prod]
-nodeC
+controller
+
+[test_nodes:children]
+dev
+stag
+
+[students]
+student_controller
+student_nodeA
+student_nodeB
+student_nodeC
