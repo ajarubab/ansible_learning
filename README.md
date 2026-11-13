@@ -167,13 +167,13 @@ which eventually means
 - hosts: dev,stag
 
 * When playbook tasks are applied on ip address 192.178.92.10 to 192.178.92.100 (on 90 servers/nodes) 
-- hosts: 192.178.92.[10:100]
+- hosts: '192.178.92.[10:100]'
 
 * When playbook tasks are applied on ip address 192.178.01.* to 192.178.50.*
-- hosts: 192.178.[01:50].*
+- hosts: '192.178.[01:50].*'
 
 * When playbook tasks are applied on ip address 190.*.*.* to 192.*.*.*
-- hosts: [190:192].*.*.*
+- hosts: '[190:192].*.*.*'
 
 # cat /etc/resolv.conf (Stores ip address of DNS server)
 
@@ -186,3 +186,27 @@ nodeA ansible_host=172.16.107.131 ansible_user=student
 then we can just put 
 - hosts: student_nodeA
 
+# If we do not have any ip address (let say 192.168.92.140) registered in our /etc/host file but still if we require it we can 
+just make an entry in the inventory file like:
+- serverd ansible_host=192.168.92.140
+- serverd.example.com ansible_host=192.168.92.140
+
+and then we are good to go with
+hosts: serverd
+or
+hosts: 192.168.92.140
+or
+hosts: serverd.example.com
+
+# to use the server-nodes which are not in any group in the inventory file automatically comes under "ungrouped" group
+so we can use the ungrouped managed host all at once as:
+- hosts: ungrouped
+
+# to exclude any or some of the hosts or group from a group of servers/managed host, we use !
+
+- hosts: groupname,excluded_node_name/ip
+- hosts: prod,!nodeC        [means all servers of group prod but not on nodeC]
+- hosts: testing_servers,!stag        [means all servers of the nested group testing_servers but not on servers of group stag]
+
+# To implement the play or task on the common hosts of two or more groups we use &
+ - hosts: dev,&stag     [fetches the common server from both the groups and then execute the play on that common server]
