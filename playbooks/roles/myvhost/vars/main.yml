@@ -1,0 +1,5 @@
+---
+# vars file for playbooks/roles/myvhost
+svc:
+  - httpd
+  - firewalld

@@ -1,0 +1,6 @@
+---
+- name: Use myvhost role
+  hosts: dev
+  become: true
+  roles:
+    - roles/myvhost

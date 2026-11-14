@@ -1,0 +1,44 @@
+---
+# tasks file for playbooks/roles/myvhost
+- name: Ensure httpd and firewalld is Installed
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ svc }}"
+
+- name: Ensure httpd is Started and Enabled
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ svc }}"
+
+- name: Allow HTTP traffic in the firewall
+  ansible.posix.firewalld:
+    service: http
+    state: enabled
+    permanent: true
+    immediate: true
+
+- name: The vhost file is installed
+  ansible.builtin.template:
+    src: vhost_conf.j2
+    dest: /etc/httpd/conf.d/vhost.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart httpd and firewalld
+
+- name: Create the directory for the HTML content
+  ansible.builtin.file:
+    path: "/var/www/vhost/{{ ansible_hostname }}"
+    state: directory
+    mode: '0755'
+
+- name: HTML content is installed
+  ansible.builtin.copy:
+    src: index.html
+    dest: "/var/www/vhost/{{ ansible_hostname }}/index.html"
+    owner: root
+    group: root
+    mode: '0644'

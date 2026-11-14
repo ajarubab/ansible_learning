@@ -1,0 +1,7 @@
+---
+# handlers file for playbooks/roles/myvhost
+- name: Restart httpd and firewalld
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: restarted
+  loop: "{{ svc }}"

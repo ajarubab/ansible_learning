@@ -210,3 +210,40 @@ so we can use the ungrouped managed host all at once as:
 
 # To implement the play or task on the common hosts of two or more groups we use &
  - hosts: dev,&stag     [fetches the common server from both the groups and then execute the play on that common server]
+
+# To create a custom role "myvhost" in selfmade folder roles in playbooks
+- ansible-galaxy role init playbooks/roles/myvhost
+it will create a folder "myvhost" under which there are:
+
+playbooks/roles/myvhost/
+├── defaults
+│   └── main.yml    (low preference variables)
+├── files           (here we keep our test file)
+├── handlers
+│   └── main.yml    (here we keep our handler)
+├── meta
+│   └── main.yml    (role metadata)
+├── README.md       (example, descriptions etc)
+├── tasks
+│   └── main.yml    (main task file)
+├── templates       (j2 templates)
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml    (high preference variable)
+
+# To see exixting role directory
+- ansible-galaxy role list
+
+# To add the path of execution of our custom role directory
+- add " roles_path = ./playbooks/roles:/usr/share/ansible/roles " in ansible.cfg file
+
+# To get the info of a role created in offline
+- ansible-galaxy role info myvhost --offline
+
+# Note: jinja2 file me 
+<VirtualHost *:80> Content </VirtualHost>
+btata hai ki kaunsi config virtualhost ke port 80 pr aane wali request ke andr apply hogi, qki virtualhost apache ka recognised container hai.
+
+# Handler wala task only tabhi execute hoga jb uske respective notify wale task ka status CHANGED hoga.
