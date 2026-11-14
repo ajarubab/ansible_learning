@@ -1,3 +1,4 @@
 *.log
 httpd.conf
 playbooks/roles/nginx-role
+playbooks/mycollections/ansible_collections

@@ -252,5 +252,16 @@ btata hai ki kaunsi config virtualhost ke port 80 pr aane wali request ke andr a
 ansible-galaxy role install geerlingguy.nginx -p playbooks/roles
 
 # To install more than one roles from internet we make a directory named requirements.yml in the roles directory
-and then execute:
+and then execute to install at the path playbooks/roles:
 - ansible-galaxy role install -r playbooks/roles/requirements.yml -p playbooks/roles
+
+# To see available ansible collection, brows "docs.ansible.com/projects/ansible/latest/collections/index.html"
+
+# Even if we download and install online roles or collections , if we didn't made its registration in ansible.cfg file , we can't use it's functional units, modules etc.
+
+# To install community.general collection at location playbooks/mycollections, we can execute in terminal
+- ansible-galaxy collection install community.general -p playbooks/mycollections
+
+# To install more than one collections from internet we make a directory named requirements.yml in the playbooks directory
+and then execute to install it at tha path playbooks/mycollections:
+- ansible-galaxy role install -r playbooks/requirements.yml -p playbooks/mycollections
