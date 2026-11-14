@@ -1,0 +1,7 @@
+---
+# - src: name/link/url
+#   version: abcd.131
+#   name: nginx-role
+
+- src: geerlingguy.nginx
+  name: nginx-role

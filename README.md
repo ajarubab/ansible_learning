@@ -247,3 +247,10 @@ playbooks/roles/myvhost/
 btata hai ki kaunsi config virtualhost ke port 80 pr aane wali request ke andr apply hogi, qki virtualhost apache ka recognised container hai.
 
 # Handler wala task only tabhi execute hoga jb uske respective notify wale task ka status CHANGED hoga.
+
+# To install an existing role from internet directly to a path playbooks/roles
+ansible-galaxy role install geerlingguy.nginx -p playbooks/roles
+
+# To install more than one roles from internet we make a directory named requirements.yml in the roles directory
+and then execute:
+- ansible-galaxy role install -r playbooks/roles/requirements.yml -p playbooks/roles
